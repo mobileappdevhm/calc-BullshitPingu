@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: new MyHomePage(title: 'Calculator'),
     );
   }
 }
@@ -43,6 +43,74 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  List<String> _labels = [];
+  List<Function> _functions = [];
+
+  String _calculatorLabel;
+
+  _MyHomePageState() {
+    for (int i = 0; i <= 8; i++) {
+      _labels.add((9 - i).toString());
+      _functions.add(() => onNumPressed(9 - i));
+    }
+
+    _labels.add("+");
+    _functions.add(() => onAddPressed());
+
+    _labels.add("0");
+    _functions.add(() => onNumPressed(0));
+
+    _labels.add("-");
+    _functions.add(() => onSubtractPressed());
+
+    _labels.add("*");
+    _functions.add(() => onMultiplyPressed());
+
+    _labels.add("/");
+    _functions.add(() => onDividePressed());
+
+    _labels.add("=");
+    _functions.add(() => onEqualsPressed());
+  }
+
+  void onNumPressed(int number) {
+    setState(() {
+      _calculatorLabel = _calculatorLabel + number.toString();
+    });
+  }
+
+  void onAddPressed() {
+
+  }
+
+  void onSubtractPressed() {
+
+  }
+
+  void onMultiplyPressed() {
+
+  }
+
+  void onDividePressed() {
+
+  }
+
+  void onEqualsPressed() {
+    setState(() {
+      _calculatorLabel = null;
+    });
+  }
+
+  String getCalculatorLabel() {
+    if (_calculatorLabel == null) {
+      _calculatorLabel = " ";
+    } else {
+      _calculatorLabel = _calculatorLabel.trim();
+    }
+
+    return _calculatorLabel;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +136,17 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> getRows() {
     List<Widget> rows = [];
 
-    for (int i = 0; i < 3; i++) {
-      rows.add(new Expanded(child: new Row(crossAxisAlignment: CrossAxisAlignment.stretch,children: new List<Widget>.generate(3, (index) => new Expanded(child: new RaisedButton(onPressed: null, child: new Text("${i * 3 + index + 1}")))))));
+    rows.add(new Container(child: new Text(getCalculatorLabel(), textScaleFactor: 2.0, maxLines: 1, overflow: TextOverflow.ellipsis, style: new TextStyle(fontSize: 20.0), textAlign: TextAlign.center), padding: new EdgeInsets.all(10.0)));
+
+    int rowCount = (_labels.length / 3).round();
+    for (int i = 0; i < rowCount; i++) {
+      rows.add(new Expanded(child: new Row(crossAxisAlignment: CrossAxisAlignment.stretch,children: new List<Widget>.generate(3, (index) {
+        int a = i * 3 + index;
+        String label = _labels[a];
+        Function func = _functions[a];
+
+        return new Expanded(child: new RaisedButton(onPressed: func, child: new Text(label)));
+      }))));
     }
 
     return rows;
