@@ -1,3 +1,5 @@
+import 'package:calculator/logic/term/term.dart';
+import 'package:calculator/logic/term/term_util.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(new MyApp());
@@ -44,62 +46,41 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  List<String> _labels = [];
-  List<Function> _functions = [];
+  List<List<String>> _calculatorControl = [
+    ["9", "8", "7", "*"],
+    ["6", "5", "4", "/"],
+    ["3", "2", "1", "+"],
+    [".", "0", "C", "="]
+  ];
 
   String _calculatorLabel;
 
-  _MyHomePageState() {
-    for (int i = 0; i <= 8; i++) {
-      _labels.add((9 - i).toString());
-      _functions.add(() => onNumPressed(9 - i));
+  void onPressed(String label) {
+    switch (label) {
+      case "=":
+        Term term = TermUtil.from(_calculatorLabel);
+
+        num result = 0;
+        if (term != null) {
+          result = term.calculate();
+        }
+
+        setState(() {
+          _calculatorLabel = result.toString();
+        });
+        break;
+
+      case "C":
+        setState(() {
+          _calculatorLabel = null;
+        });
+        break;
+
+      default:
+        setState(() {
+          _calculatorLabel += label;
+        });
     }
-
-    _labels.add("+");
-    _functions.add(() => onAddPressed());
-
-    _labels.add("0");
-    _functions.add(() => onNumPressed(0));
-
-    _labels.add("-");
-    _functions.add(() => onSubtractPressed());
-
-    _labels.add("*");
-    _functions.add(() => onMultiplyPressed());
-
-    _labels.add("/");
-    _functions.add(() => onDividePressed());
-
-    _labels.add("=");
-    _functions.add(() => onEqualsPressed());
-  }
-
-  void onNumPressed(int number) {
-    setState(() {
-      _calculatorLabel = _calculatorLabel + number.toString();
-    });
-  }
-
-  void onAddPressed() {
-
-  }
-
-  void onSubtractPressed() {
-
-  }
-
-  void onMultiplyPressed() {
-
-  }
-
-  void onDividePressed() {
-
-  }
-
-  void onEqualsPressed() {
-    setState(() {
-      _calculatorLabel = null;
-    });
   }
 
   String getCalculatorLabel() {
@@ -136,16 +117,20 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> getRows() {
     List<Widget> rows = [];
 
-    rows.add(new Container(child: new Text(getCalculatorLabel(), textScaleFactor: 2.0, maxLines: 1, overflow: TextOverflow.ellipsis, style: new TextStyle(fontSize: 20.0), textAlign: TextAlign.center), padding: new EdgeInsets.all(10.0)));
+    Text text = new Text(getCalculatorLabel(), textScaleFactor: 4.0, maxLines: 1, overflow: TextOverflow.ellipsis, style: new TextStyle(fontSize: 20.0), textAlign: TextAlign.center);
+    rows.add(new Container(child: text, padding: new EdgeInsets.all(10.0)));
 
-    int rowCount = (_labels.length / 3).round();
+    int rowCount = _calculatorControl.length;
     for (int i = 0; i < rowCount; i++) {
-      rows.add(new Expanded(child: new Row(crossAxisAlignment: CrossAxisAlignment.stretch,children: new List<Widget>.generate(3, (index) {
-        int a = i * 3 + index;
-        String label = _labels[a];
-        Function func = _functions[a];
+      List<String> labels = _calculatorControl[i];
 
-        return new Expanded(child: new RaisedButton(onPressed: func, child: new Text(label)));
+      int colCount = labels.length;
+      rows.add(new Expanded(child: new Row(crossAxisAlignment: CrossAxisAlignment.stretch,children: new List<Widget>.generate(colCount, (index) {
+        String label = labels[index];
+
+        return new Expanded(child: new RaisedButton(onPressed: () {
+          onPressed(label);
+        }, child: new Text(label)));
       }))));
     }
 
