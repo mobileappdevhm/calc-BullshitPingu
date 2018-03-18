@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(new CalculatorApp());
 
+/// Simple calculator app with flutter.
 class CalculatorApp extends StatelessWidget {
   static const String title = "Calculator";
 
