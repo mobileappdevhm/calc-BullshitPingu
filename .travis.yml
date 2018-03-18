@@ -36,17 +36,14 @@ matrix:
     - "./flutter/bin/flutter doctor"
     script:
     - "./flutter/bin/flutter -v build apk"
-    - pwd
-    before_deploy:
-    - git config --local user.name "BullshitPingu"
-    - git config --local user.email "barny.eder@gmail.com"
-    - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
     deploy:
       provider: releases
       api_key:
-          secure: ${GH-TOKEN}
+          secure: rL+OBFuhdPWXGuRWnb+8U4+4uZNiKTOJV6NHPdxSm9sg8E2ErPHBAfxiyIQm4L8o4O3zodwWfUpk1p97ji/l8Pe0kVU4H9mn0tHseWrjIFl95pFGxvxISW51N4pL9SGqpUsIxpgALdwPXKss3CDvguwLgVGKJrkvjakb7cbYpwIQ6uvvjRbrRUObDkDEKZcSYjeAicZtgWSC18drvwKs7CEqBPC64uz44D0xaDzgDRLRFdKfBWDZMOoTBwxSqLOOdALrOUgbARadwnMZD3b/aU9jEEqrXrNmnLeAOdWez3kgzz86MgG4kUTU0abHeVvKgoktUgwb9J8GshAwDsFUYigme+hPcFvKdaKiwceqjg6dkTiYNd4D3bnWBPCfOkWjlDsPGTtCZ7PLqosJ0sEIjo3tcLtFIP7ASWcuqp4xJsnExr+07jkhs4nV42ePhQCjdzz16R0xSIarJCOCt4SBmK2tV2bVCptNTfL13JqWiKFmnS8S34av1WNJW/RLows04jhNqa8gkF8kMD0x37PEGeuMCCHV9+2H6Dt4p4ahGvglz2Va+6VP/AUv5xelGF32xEtzDqt5WUjGHTzguCQP+e/KjoziM+CvQdQkMGbVCiVuEc1KsPzqEvu1p63CBkFPuVFsrBYXPLsguWQY7PpSATuG0SAiKDFGNp2i8HOuhNg=
       file: "/home/travis/build/mobileappdevhm/calc-BullshitPingu/build/app/outputs/apk/release/app-release.apk"
       skip_cleanup: true
+      on:
+        tags: true
 cache:
   directories:
   - "$HOME/.pub-cache"
