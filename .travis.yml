@@ -41,13 +41,13 @@ matrix:
         - pwd
       before_deploy:
         # Set up git user name and tag this commit
-        - git config --local user.name "YOUR GIT USER NAME"
-        - git config --local user.email "YOUR GIT USER EMAIL"
+        - git config --local user.name "BullshitPingu"
+        - git config --local user.email "barny.eder@gmail.com"
         - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
       deploy:
         provider: releases
         api_key: ${GH-TOKEN}
-        file: "build/app/outputs/apk/release/app-release.apk"
+        file: "/home/travis/build/mobileappdevhm/calc-BullshitPingu/build/app/outputs/apk/release/app-release.apk"
         skip_cleanup: true
 
 cache:
