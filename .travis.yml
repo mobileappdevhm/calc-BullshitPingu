@@ -33,7 +33,7 @@ matrix:
         - export GRADLE_HOME=$PWD/gradle-4.6
         - export PATH=$GRADLE_HOME/bin:$PATH
         - git clone https://github.com/flutter/flutter.git -b alpha --depth 1 # Install Flutter
-        - ./flutter/bin/flutter doctor --android-licenses # Accept all licenses
+        - ./flutter/bin/flutter doctor
       script:
         - ./flutter/bin/flutter -v build apk # Build the APK
       after_success:
