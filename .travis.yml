@@ -46,7 +46,7 @@ matrix:
         - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
       deploy:
         provider: releases
-        api_key: ${GH-TOKEN}
+        api_key: "${GH-TOKEN}"
         file: "/home/travis/build/mobileappdevhm/calc-BullshitPingu/build/app/outputs/apk/release/app-release.apk"
         skip_cleanup: true
 
