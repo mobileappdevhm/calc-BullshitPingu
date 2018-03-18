@@ -28,6 +28,7 @@ matrix:
             - libstdc++6
             - fonts-droid
       before_install:
+        - yes | sdkmanager "platforms;android-27"
         - chmod +x .travis/push_apk.sh
       before_script:
         - wget http://services.gradle.org/distributions/gradle-4.6-bin.zip
