@@ -13,6 +13,7 @@ matrix:
           - platform-tools
           - build-tools-27.0.3
           - android-27
+          - android-26
           - sys-img-armeabi-v7a-google_apis-27
           - extra-android-m2repository
           - extra-google-m2repository
