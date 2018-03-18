@@ -2,84 +2,83 @@ import 'package:calculator/logic/term/term.dart';
 import 'package:calculator/logic/term/term_util.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(new CalculatorApp());
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class CalculatorApp extends StatelessWidget {
+  static const String title = "Calculator";
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Calculator',
+      title: CalculatorApp.title,
       theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepOrange,
       ),
-      home: new MyHomePage(title: 'Calculator'),
+      home: new CalculatorWidget(title: CalculatorApp.title),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+class CalculatorWidget extends StatefulWidget {
+  CalculatorWidget({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _CalculatorState createState() => new _CalculatorState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _CalculatorState extends State<CalculatorWidget> {
+  static String _back = new String.fromCharCodes(new Runes("\u25c0"));
 
-  List<List<String>> _calculatorControl = [
-    ["9", "8", "7", "*"],
-    ["6", "5", "4", "/"],
-    ["3", "2", "1", "+"],
-    [".", "0", "C", "="]
-  ];
+  List<List<String>> _calculatorControl;
+
+  ScrollController _scrollController = new ScrollController();
+
+  _CalculatorState() {
+    init();
+  }
+
+  void init() {
+    _calculatorControl = [
+      ["7", "8", "9", "*"],
+      ["4", "5", "6", "/"],
+      ["1", "2", "3", "+"],
+      ["0", ".", "-"],
+      [_back, "C", "="]
+    ];
+  }
 
   String _calculatorLabel;
 
   void onPressed(String label) {
-    switch (label) {
-      case "=":
-        Term term = TermUtil.from(_calculatorLabel);
+    if (label == "=") {
+      Term term = TermUtil.from(_calculatorLabel);
 
-        num result = 0;
-        if (term != null) {
-          result = term.calculate();
-        }
+      num result = 0;
+      if (term != null) {
+        result = term.calculate();
+      }
 
-        setState(() {
-          _calculatorLabel = result.toString();
-        });
-        break;
-
-      case "C":
-        setState(() {
+      setState(() {
+        _calculatorLabel = result.toString();
+      });
+    } else if (label == "C") {
+      setState(() {
+        _calculatorLabel = null;
+      });
+    } else if (label == _back) {
+      setState(() {
+        if (_calculatorLabel.length <= 1) {
           _calculatorLabel = null;
-        });
-        break;
-
-      default:
-        setState(() {
-          _calculatorLabel += label;
-        });
+        } else {
+          _calculatorLabel = _calculatorLabel.substring(0, _calculatorLabel.length - 1);
+        }
+      });
+    } else {
+      setState(() {
+        _calculatorLabel += label;
+      });
     }
   }
 
@@ -117,24 +116,32 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> getRows() {
     List<Widget> rows = [];
 
-    Text text = new Text(getCalculatorLabel(), textScaleFactor: 4.0, maxLines: 1, overflow: TextOverflow.ellipsis, style: new TextStyle(fontSize: 20.0), textAlign: TextAlign.center);
-    rows.add(new Container(child: text, padding: new EdgeInsets.all(10.0)));
+    Text text = new Text(getCalculatorLabel(), textScaleFactor: 3.0, maxLines: 1, style: new TextStyle(fontSize: 20.0), textAlign: TextAlign.center);
+    SingleChildScrollView scrollView = new SingleChildScrollView(
+        child: new Container(child: text, padding: new EdgeInsets.all(10.0)), scrollDirection: Axis.horizontal, controller: _scrollController, reverse: true);
+
+    rows.add(scrollView);
 
     int rowCount = _calculatorControl.length;
     for (int i = 0; i < rowCount; i++) {
       List<String> labels = _calculatorControl[i];
 
       int colCount = labels.length;
-      rows.add(new Expanded(child: new Row(crossAxisAlignment: CrossAxisAlignment.stretch,children: new List<Widget>.generate(colCount, (index) {
-        String label = labels[index];
+      rows.add(new Expanded(
+          child: new Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: new List<Widget>.generate(colCount, (index) {
+                String label = labels[index];
 
-        return new Expanded(child: new RaisedButton(onPressed: () {
-          onPressed(label);
-        }, child: new Text(label)));
-      }))));
+                return new Expanded(
+                    child: new RaisedButton(
+                        onPressed: () {
+                          onPressed(label);
+                        },
+                        child: new Text(label, style: new TextStyle(fontSize: 25.0))));
+              }))));
     }
 
     return rows;
   }
-
 }

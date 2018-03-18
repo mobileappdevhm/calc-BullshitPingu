@@ -1,11 +1,8 @@
-import 'package:calculator/logic/term/term.dart';
+import 'package:calculator/logic/term/number_member.dart';
+import 'package:calculator/logic/term/term_member.dart';
 
-/// An operator has two parts which form the result when concatenated with the operator.
-abstract class Operator implements Term {
+abstract class Operator implements TermMember {
 
-  Term first;
-  Term last;
-
-  Operator(this.first, this.last);
+  NumberMember calculate(NumberMember m1, NumberMember m2);
 
 }

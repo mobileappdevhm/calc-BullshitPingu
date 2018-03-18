@@ -1,13 +1,11 @@
-import 'package:calculator/logic/term/operator/operator.dart';
-import 'package:calculator/logic/term/term.dart';
+import 'package:calculator/logic/term/number_member.dart';
+import 'package:calculator/logic/term/operator/dot_operator.dart';
 
-class DivisionOperator extends Operator {
-
-  DivisionOperator(Term first, Term last) : super(first, last);
+class DivisionOperator extends DotOperator {
 
   @override
-  num calculate() {
-    return first.calculate() / last.calculate();
+  NumberMember calculate(NumberMember m1, NumberMember m2) {
+    return m1 / m2;
   }
 
 }
