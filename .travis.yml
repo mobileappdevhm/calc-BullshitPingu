@@ -1,55 +1,52 @@
-# Build matrix to build both APKs (Android) and IPAs (iOS), both unsigned.
 matrix:
   include:
-    - os: linux
-      language: android
-      licenses:
-        - 'android-sdk-preview-license-.+'
-        - 'android-sdk-license-.+'
-        - 'google-gdk-license-.+'
-      android:
-        components:
-          - tools
-          - platform-tools
-          - build-tools-27.0.3
-          - android-26
-          - sys-img-armeabi-v7a-google_apis-26
-          - extra-android-m2repository
-          - extra-google-m2repository
-          - extra-google-android-support
-      jdk: oraclejdk8
-      sudo: true
-      addons:
-        apt:
-          # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
-          sources:
-            - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
-          packages:
-            - libstdc++6
-            - fonts-droid
-      before_install:
-        - yes | sdkmanager "platforms;android-27"
-      before_script:
-        - wget http://services.gradle.org/distributions/gradle-4.6-bin.zip
-        - unzip -qq gradle-4.6-bin.zip
-        - export GRADLE_HOME=$PWD/gradle-4.6
-        - export PATH=$GRADLE_HOME/bin:$PATH
-        - git clone https://github.com/flutter/flutter.git -b alpha --depth 1 # Install Flutter
-        - ./flutter/bin/flutter doctor
-      script:
-        - ./flutter/bin/flutter -v build apk # Build the APK
-        - pwd
-      before_deploy:
-        # Set up git user name and tag this commit
-        - git config --local user.name "BullshitPingu"
-        - git config --local user.email "barny.eder@gmail.com"
-        - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
-      deploy:
-        provider: releases
-        api_key: "${GH-TOKEN}"
-        file: "/home/travis/build/mobileappdevhm/calc-BullshitPingu/build/app/outputs/apk/release/app-release.apk"
-        skip_cleanup: true
-
+  - os: linux
+    language: android
+    licenses:
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+
+    android:
+      components:
+      - tools
+      - platform-tools
+      - build-tools-27.0.3
+      - android-26
+      - sys-img-armeabi-v7a-google_apis-26
+      - extra-android-m2repository
+      - extra-google-m2repository
+      - extra-google-android-support
+    jdk: oraclejdk8
+    sudo: true
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - libstdc++6
+        - fonts-droid
+    before_install:
+    - yes | sdkmanager "platforms;android-27"
+    before_script:
+    - wget http://services.gradle.org/distributions/gradle-4.6-bin.zip
+    - unzip -qq gradle-4.6-bin.zip
+    - export GRADLE_HOME=$PWD/gradle-4.6
+    - export PATH=$GRADLE_HOME/bin:$PATH
+    - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
+    - "./flutter/bin/flutter doctor"
+    script:
+    - "./flutter/bin/flutter -v build apk"
+    - pwd
+    before_deploy:
+    - git config --local user.name "BullshitPingu"
+    - git config --local user.email "barny.eder@gmail.com"
+    - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+    deploy:
+      provider: releases
+      api_key:
+          secure: ${GH-TOKEN}
+      file: "/home/travis/build/mobileappdevhm/calc-BullshitPingu/build/app/outputs/apk/release/app-release.apk"
+      skip_cleanup: true
 cache:
   directories:
-    - $HOME/.pub-cache
+  - "$HOME/.pub-cache"
