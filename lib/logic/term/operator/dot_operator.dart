@@ -1,5 +1,5 @@
-import 'package:calculator/logic/term/operator/operator.dart';
+import 'package:calculator/logic/term/operator/binary_operator.dart';
 
-abstract class DotOperator extends Operator {
+abstract class DotOperator extends BinaryOperator {
 
 }

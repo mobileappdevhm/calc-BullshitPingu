@@ -31,6 +31,8 @@ class CalculatorWidget extends StatefulWidget {
 
 class _CalculatorState extends State<CalculatorWidget> {
   static String _back = new String.fromCharCodes(new Runes("\u25c0"));
+  static String _multiply = new String.fromCharCodes(new Runes("\u00d7"));
+  static String _divide = new String.fromCharCodes(new Runes("\u00f7"));
 
   List<List<String>> _calculatorControl;
 
@@ -42,11 +44,11 @@ class _CalculatorState extends State<CalculatorWidget> {
 
   void init() {
     _calculatorControl = [
-      ["7", "8", "9", "*"],
-      ["4", "5", "6", "/"],
+      ["7", "8", "9", _multiply],
+      ["4", "5", "6", _divide],
       ["1", "2", "3", "+"],
-      ["0", ".", "-"],
-      [_back, "C", "="]
+      ["0", ".", "-", "("],
+      [_back, "C", "=", ")"]
     ];
   }
 
@@ -54,7 +56,7 @@ class _CalculatorState extends State<CalculatorWidget> {
 
   void onPressed(String label) {
     if (label == "=") {
-      Term term = TermUtil.from(_calculatorLabel);
+      Term term = TermUtil.from(normalizeCalculation(_calculatorLabel));
 
       num result = 0;
       if (term != null) {
@@ -81,6 +83,13 @@ class _CalculatorState extends State<CalculatorWidget> {
         _calculatorLabel += label;
       });
     }
+  }
+
+  String normalizeCalculation(String str) {
+    str = str.replaceAll(_multiply, "*");
+    str = str.replaceAll(_divide, "/");
+
+    return str;
   }
 
   String getCalculatorLabel() {
@@ -139,7 +148,8 @@ class _CalculatorState extends State<CalculatorWidget> {
                         onPressed: () {
                           onPressed(label);
                         },
-                        child: new Text(label, style: new TextStyle(fontSize: 25.0))));
+                        child: new Text(label, style: new TextStyle(fontSize: 25.0)),
+                        color: index == colCount - 1 ? Colors.amberAccent : Colors.white));
               }))));
     }
 
