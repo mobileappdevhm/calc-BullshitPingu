@@ -69,7 +69,7 @@ class TermUtil {
       try {
         term = term + new NumberMember(num.parse(numberString));
       } catch (e) {
-        // Do nothing
+        // Do nothing.
       }
 
       buffer.clear();
