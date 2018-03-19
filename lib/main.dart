@@ -30,6 +30,7 @@ class CalculatorWidget extends StatefulWidget {
 }
 
 class _CalculatorState extends State<CalculatorWidget> {
+
   static String _back = new String.fromCharCodes(new Runes("\u25c0"));
   static String _multiply = new String.fromCharCodes(new Runes("\u00d7"));
   static String _divide = new String.fromCharCodes(new Runes("\u00f7"));
@@ -37,6 +38,8 @@ class _CalculatorState extends State<CalculatorWidget> {
   List<List<String>> _calculatorControl;
 
   ScrollController _scrollController = new ScrollController();
+
+  num _result = 0;
 
   _CalculatorState() {
     init();
@@ -56,12 +59,7 @@ class _CalculatorState extends State<CalculatorWidget> {
 
   void onPressed(String label) {
     if (label == "=") {
-      Term term = TermUtil.from(normalizeCalculation(_calculatorLabel));
-
-      num result = 0;
-      if (term != null) {
-        result = term.calculate();
-      }
+      num result = getResult();
 
       setState(() {
         _calculatorLabel = result.toString();
@@ -81,8 +79,25 @@ class _CalculatorState extends State<CalculatorWidget> {
     } else {
       setState(() {
         _calculatorLabel += label;
+
+        _result = getResult();
       });
     }
+  }
+
+  num getResult() {
+    Term term = TermUtil.from(normalizeCalculation(_calculatorLabel));
+
+    num result = 0;
+    if (term != null) {
+      try {
+        result = term.calculate();
+      } catch (e) {
+        result = _result;
+      }
+    }
+
+    return result;
   }
 
   String normalizeCalculation(String str) {
@@ -129,8 +144,10 @@ class _CalculatorState extends State<CalculatorWidget> {
     Text text = new Text(getCalculatorLabel(), textScaleFactor: 3.0, maxLines: 1, style: new TextStyle(fontSize: 20.0), textAlign: TextAlign.center);
     SingleChildScrollView scrollView = new SingleChildScrollView(
         child: new Container(child: text, padding: new EdgeInsets.all(10.0)), scrollDirection: Axis.horizontal, controller: _scrollController, reverse: true);
-
     rows.add(scrollView);
+
+    Text result = new Text("$_result", textScaleFactor: 2.0, maxLines: 1, style: new TextStyle(fontSize: 14.0), textAlign: TextAlign.right);
+    rows.add(new Row(children: [result], mainAxisAlignment: MainAxisAlignment.end));
 
     int rowCount = _calculatorControl.length;
     for (int i = 0; i < rowCount; i++) {

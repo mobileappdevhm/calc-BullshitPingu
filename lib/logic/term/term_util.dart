@@ -66,7 +66,11 @@ class TermUtil {
   static void _addNumberToTerm(List<int> buffer, Term term) {
     if (buffer.length != 0) {
       String numberString = new String.fromCharCodes(buffer);
-      term = term + new NumberMember(num.parse(numberString));
+      try {
+        term = term + new NumberMember(num.parse(numberString));
+      } catch (e) {
+        // Do nothing
+      }
 
       buffer.clear();
     }
