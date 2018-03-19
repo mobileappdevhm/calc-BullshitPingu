@@ -43,7 +43,7 @@ matrix:
       file: "/home/travis/build/mobileappdevhm/calc-BullshitPingu/build/app/outputs/apk/release/app-release.apk"
       skip_cleanup: true
       on:
-        tags: true
+        tags: false
 cache:
   directories:
   - "$HOME/.pub-cache"
