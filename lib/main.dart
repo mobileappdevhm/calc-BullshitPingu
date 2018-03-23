@@ -1,6 +1,5 @@
-import 'package:calculator/logic/term/term.dart';
-import 'package:calculator/logic/term/term_util.dart';
 import 'package:flutter/material.dart';
+import "package:math_expressions/math_expressions.dart";
 
 void main() => runApp(new CalculatorApp());
 
@@ -86,15 +85,15 @@ class _CalculatorState extends State<CalculatorWidget> {
   }
 
   num getResult() {
-    Term term = TermUtil.from(normalizeCalculation(_calculatorLabel));
+    Parser p = new Parser();
 
     num result = 0;
-    if (term != null) {
-      try {
-        result = term.calculate();
-      } catch (e) {
-        result = _result;
-      }
+
+    try {
+      Expression exp = p.parse(normalizeCalculation(_calculatorLabel));
+      result = exp.evaluate(EvaluationType.REAL, new ContextModel());
+    } catch (e) {
+      result = _result;
     }
 
     return result;
