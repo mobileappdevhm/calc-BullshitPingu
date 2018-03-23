@@ -33,17 +33,10 @@ matrix:
     - export GRADLE_HOME=$PWD/gradle-4.6
     - export PATH=$GRADLE_HOME/bin:$PATH
     - git clone https://github.com/flutter/flutter.git -b alpha --depth 1
-    - "./flutter/bin/flutter doctor"
+    - ./flutter/bin/flutter doctor
     script:
-    - "./flutter/bin/flutter -v build apk"
-    deploy:
-      provider: releases
-      api_key:
-          secure: rL+OBFuhdPWXGuRWnb+8U4+4uZNiKTOJV6NHPdxSm9sg8E2ErPHBAfxiyIQm4L8o4O3zodwWfUpk1p97ji/l8Pe0kVU4H9mn0tHseWrjIFl95pFGxvxISW51N4pL9SGqpUsIxpgALdwPXKss3CDvguwLgVGKJrkvjakb7cbYpwIQ6uvvjRbrRUObDkDEKZcSYjeAicZtgWSC18drvwKs7CEqBPC64uz44D0xaDzgDRLRFdKfBWDZMOoTBwxSqLOOdALrOUgbARadwnMZD3b/aU9jEEqrXrNmnLeAOdWez3kgzz86MgG4kUTU0abHeVvKgoktUgwb9J8GshAwDsFUYigme+hPcFvKdaKiwceqjg6dkTiYNd4D3bnWBPCfOkWjlDsPGTtCZ7PLqosJ0sEIjo3tcLtFIP7ASWcuqp4xJsnExr+07jkhs4nV42ePhQCjdzz16R0xSIarJCOCt4SBmK2tV2bVCptNTfL13JqWiKFmnS8S34av1WNJW/RLows04jhNqa8gkF8kMD0x37PEGeuMCCHV9+2H6Dt4p4ahGvglz2Va+6VP/AUv5xelGF32xEtzDqt5WUjGHTzguCQP+e/KjoziM+CvQdQkMGbVCiVuEc1KsPzqEvu1p63CBkFPuVFsrBYXPLsguWQY7PpSATuG0SAiKDFGNp2i8HOuhNg=
-      file: "/home/travis/build/mobileappdevhm/calc-BullshitPingu/build/app/outputs/apk/release/app-release.apk"
-      skip_cleanup: true
-      on:
-        tags: false
+    - ./flutter/bin/flutter test
+    - ./flutter/bin/flutter -v build apk
 cache:
   directories:
   - "$HOME/.pub-cache"
